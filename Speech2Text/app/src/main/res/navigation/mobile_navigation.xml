@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.grobocop.speech2text.ui.home.HomeFragment"
+        android:name="com.grobocop.speech2text.ui.fragments.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/nav_send"
-        android:name="com.grobocop.speech2text.ui.send.SendFragment"
+        android:name="com.grobocop.speech2text.ui.fragments.SendFragment"
         android:label="@string/menu_send"
         tools:layout="@layout/fragment_send" />
 </navigation>

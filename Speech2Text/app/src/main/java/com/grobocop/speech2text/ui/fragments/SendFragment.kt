@@ -1,4 +1,4 @@
-package com.grobocop.speech2text.ui.send
+package com.grobocop.speech2text.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.grobocop.speech2text.R
-import com.grobocop.speech2text.ui.TranscriptionViewModel
-import com.grobocop.speech2text.ui.TranscriptionsListViewModel
+import com.grobocop.speech2text.ui.ViewModel.TranscriptionViewModel
 import com.grobocop.speech2text.utils.InjectorUtils
 
 class SendFragment : Fragment() {
