@@ -1,9 +1,9 @@
-package com.grobocop.speech2text.ui.ViewModel.Factory
+package com.grobocop.speech2text.ui.viewModel.Factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.grobocop.speech2text.data.TranscriptionRepository
-import com.grobocop.speech2text.ui.ViewModel.TranscriptionsListViewModel
+import com.grobocop.speech2text.ui.viewModel.TranscriptionsListViewModel
 
 class TranscriptionsListViewModelFactory(private val transcriptionRepository: TranscriptionRepository) :
     ViewModelProvider.NewInstanceFactory() {

@@ -13,7 +13,7 @@ class TranscriptionDao {
     }
 
     fun addTranscription(transcription: Transcription) {
-        if (!transcriptionsList.contains(transcription)) {
+        if (!transcriptionsList.contains(transcription) && !transcription.text.isNullOrEmpty()) {
             transcriptionsList.add(transcription)
             transcriptions.value = transcriptionsList
         }
@@ -25,7 +25,7 @@ class TranscriptionDao {
         value = transcriptionsList[index]
     } as LiveData<Transcription>
 
-    fun getLastOrNew() = MutableLiveData<Transcription>().apply {
-        value = transcriptionsList.lastOrNull() ?: Transcription("", Date())
+    fun getNew() = MutableLiveData<Transcription>().apply {
+        value = Transcription("", Date())
     } as LiveData<Transcription>
 }

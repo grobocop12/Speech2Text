@@ -20,4 +20,14 @@
         android:name="com.grobocop.speech2text.ui.fragments.SendFragment"
         android:label="@string/menu_send"
         tools:layout="@layout/fragment_send" />
+
+    <fragment
+        android:id="@+id/nav_rv_item"
+        android:name="com.grobocop.speech2text.ui.recyclerView.TranscriptionViewHolder"
+        tools:layout="@layout/transcription_list_item">
+        <action
+            android:id="@+id/action_nav_rv_item_to_nav_send"
+            app:destination="@id/nav_send" />
+    </fragment>
+
 </navigation>

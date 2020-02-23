@@ -1,4 +1,4 @@
-package com.grobocop.speech2text.ui.ViewModel
+package com.grobocop.speech2text.ui.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -9,9 +9,16 @@ class TranscriptionViewModel(private val transcriptionRepository: TranscriptionR
     ViewModel() {
     private lateinit var transcription: LiveData<Transcription>
 
-    fun getLastOrNew() = transcriptionRepository.getLastOrNew().also {
+    fun getNew() = transcriptionRepository.getNew().also {
         transcription = it
     }
 
     fun addItem() = transcriptionRepository.addTranscription(this.transcription.value!!)
+    fun getTranscription(index: Int) = transcriptionRepository.getTranscription(index).also {
+        transcription = it
+    }
+
+    fun setText(text: String) {
+        transcription.value?.text = text
+    }
 }

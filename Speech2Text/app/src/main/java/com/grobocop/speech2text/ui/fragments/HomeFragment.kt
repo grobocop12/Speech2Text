@@ -12,14 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.grobocop.speech2text.R
-import com.grobocop.speech2text.ui.ViewModel.TranscriptionsListViewModel
+import com.grobocop.speech2text.ui.viewModel.TranscriptionsListViewModel
 import com.grobocop.speech2text.ui.recyclerView.TranscriptionAdapter
 import com.grobocop.speech2text.utils.InjectorUtils
 
 class HomeFragment : Fragment() {
-
     private lateinit var homeViewModel: TranscriptionsListViewModel
-    var i = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +29,6 @@ class HomeFragment : Fragment() {
             ViewModelProvider(this, factory).get(TranscriptionsListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         setupUI(root)
-
         return root
     }
 
@@ -41,13 +38,18 @@ class HomeFragment : Fragment() {
         listRecyclerView.layoutManager = LinearLayoutManager(this.context)
         val adapter = TranscriptionAdapter(transcriptions, this.context)
         listRecyclerView.adapter = adapter
+
         transcriptions.observe(this.viewLifecycleOwner, Observer {
             adapter.notifyDataSetChanged()
         })
         val floatingButton = root.findViewById<FloatingActionButton>(R.id.home_fab)
         floatingButton?.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_home_to_nav_send)
+            navigateToSendFragment()
         }
+    }
+
+    private fun navigateToSendFragment() {
+        findNavController().navigate(R.id.action_nav_home_to_nav_send)
     }
 
 }

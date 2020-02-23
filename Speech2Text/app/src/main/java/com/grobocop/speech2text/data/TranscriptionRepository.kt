@@ -9,7 +9,7 @@ class TranscriptionRepository private constructor(private val transcriptionDao: 
 
     fun getTranscription(index: Int) = transcriptionDao.getTranscription(index)
 
-    fun getLastOrNew() = transcriptionDao.getLastOrNew()
+    fun getNew() = transcriptionDao.getNew()
 
     companion object {
         @Volatile

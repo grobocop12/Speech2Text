@@ -1,4 +1,4 @@
-package com.grobocop.speech2text.ui.ViewModel
+package com.grobocop.speech2text.ui.viewModel
 
 import androidx.lifecycle.ViewModel
 import com.grobocop.speech2text.data.Transcription
