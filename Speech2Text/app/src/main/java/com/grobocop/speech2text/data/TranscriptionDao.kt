@@ -13,7 +13,7 @@ class TranscriptionDao {
     }
 
     fun addTranscription(transcription: Transcription) {
-        if (!transcriptionsList.contains(transcription) && !transcription.text.isNullOrEmpty()) {
+        if (!transcriptionsList.contains(transcription) && transcription.text.isNotEmpty()) {
             transcriptionsList.add(transcription)
             transcriptions.value = transcriptionsList
         }

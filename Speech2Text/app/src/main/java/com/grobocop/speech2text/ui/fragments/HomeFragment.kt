@@ -24,12 +24,16 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val root = inflater.inflate(R.layout.fragment_home, container, false)
+        setViewModel()
+        setupUI(root)
+        return root
+    }
+
+    private fun setViewModel() {
         val factory = InjectorUtils.provideTranscriptionsListViewModelFactory()
         homeViewModel =
             ViewModelProvider(this, factory).get(TranscriptionsListViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        setupUI(root)
-        return root
     }
 
     private fun setupUI(root: View) {
@@ -44,12 +48,12 @@ class HomeFragment : Fragment() {
         })
         val floatingButton = root.findViewById<FloatingActionButton>(R.id.home_fab)
         floatingButton?.setOnClickListener {
-            navigateToSendFragment()
+            navigateToEditFragment()
         }
     }
 
-    private fun navigateToSendFragment() {
-        findNavController().navigate(R.id.action_nav_home_to_nav_send)
+    private fun navigateToEditFragment() {
+        findNavController().navigate(R.id.action_nav_home_to_nav_edit)
     }
 
 }

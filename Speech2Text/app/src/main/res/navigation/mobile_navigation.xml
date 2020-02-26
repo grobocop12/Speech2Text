@@ -11,6 +11,9 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home">
         <action
+            android:id="@+id/action_nav_home_to_nav_edit"
+            app:destination="@id/nav_edit" />
+        <action
             android:id="@+id/action_nav_home_to_nav_send"
             app:destination="@id/nav_send" />
     </fragment>
@@ -22,12 +25,9 @@
         tools:layout="@layout/fragment_send" />
 
     <fragment
-        android:id="@+id/nav_rv_item"
-        android:name="com.grobocop.speech2text.ui.recyclerView.TranscriptionViewHolder"
-        tools:layout="@layout/transcription_list_item">
-        <action
-            android:id="@+id/action_nav_rv_item_to_nav_send"
-            app:destination="@id/nav_send" />
-    </fragment>
+        android:id="@+id/nav_edit"
+        android:name="com.grobocop.speech2text.ui.fragments.EditFragment"
+        android:label="@string/menu_edit"
+        tools:layout="@layout/edit_fragment" />
 
 </navigation>
