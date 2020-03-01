@@ -14,6 +14,9 @@ object PermissionsManager {
     ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
         activity,
         Manifest.permission.RECORD_AUDIO
+    ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+        activity,
+        Manifest.permission.MODIFY_AUDIO_SETTINGS
     ) == PackageManager.PERMISSION_GRANTED
 
     fun requestPermissions(activity: Activity) {
@@ -21,7 +24,8 @@ object PermissionsManager {
             activity,
             arrayOf(
                 Manifest.permission.INTERNET,
-                Manifest.permission.RECORD_AUDIO
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.MODIFY_AUDIO_SETTINGS
             ),
             PackageManager.PERMISSION_GRANTED
         )

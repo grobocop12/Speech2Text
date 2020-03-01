@@ -39,14 +39,13 @@ class HomeFragment : Fragment() {
     private fun setupUI(root: View) {
         val listRecyclerView = root.findViewById<RecyclerView>(R.id.transcriptions_list)
         val transcriptions = homeViewModel.getTranscriptions()
-        listRecyclerView.layoutManager = LinearLayoutManager(this.context)
         val adapter = TranscriptionAdapter(transcriptions, this.context)
+        val floatingButton = root.findViewById<FloatingActionButton>(R.id.home_fab)
+        listRecyclerView.layoutManager = LinearLayoutManager(this.context)
         listRecyclerView.adapter = adapter
-
         transcriptions.observe(this.viewLifecycleOwner, Observer {
             adapter.notifyDataSetChanged()
         })
-        val floatingButton = root.findViewById<FloatingActionButton>(R.id.home_fab)
         floatingButton?.setOnClickListener {
             navigateToEditFragment()
         }
