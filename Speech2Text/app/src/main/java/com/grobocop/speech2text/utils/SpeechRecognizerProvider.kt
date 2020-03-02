@@ -1,17 +1,18 @@
 package com.grobocop.speech2text.utils
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent
-import android.widget.Toast
 import java.util.*
 
 object SpeechRecognizerProvider {
-    fun createSpeechRecognizer(context: Context?): SpeechRecognizer {
+    fun createSpeechRecognizer(
+        context: Context?,
+        speechRecognizerObserver: SpeechRecognizerObserver
+    ): SpeechRecognizer {
         val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
 
         recognizer.setRecognitionListener(object : RecognitionListener {
@@ -40,7 +41,7 @@ object SpeechRecognizerProvider {
             }
 
             override fun onEndOfSpeech() {
-                Toast.makeText(context, "Koniec", Toast.LENGTH_SHORT).show()
+
             }
 
             override fun onError(error: Int) {
@@ -48,7 +49,10 @@ object SpeechRecognizerProvider {
             }
 
             override fun onResults(results: Bundle?) {
-                Toast.makeText(context, "Koniec", Toast.LENGTH_SHORT).show()
+                val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if(matches!=null) {
+                    speechRecognizerObserver.onResult(matches[0])
+                }
             }
         })
         return recognizer
@@ -62,9 +66,6 @@ object SpeechRecognizerProvider {
         )
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-        intent.putExtra(
-            RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 500
-        )
         return intent
     }
 

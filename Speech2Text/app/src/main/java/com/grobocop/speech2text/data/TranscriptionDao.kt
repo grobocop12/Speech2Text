@@ -19,13 +19,13 @@ class TranscriptionDao {
         }
     }
 
-    fun getTranscriptions() = transcriptions as LiveData<List<Transcription>>
+    fun getTranscriptions() = transcriptions
 
     fun getTranscription(index: Int) = MutableLiveData<Transcription>().apply {
         value = transcriptionsList[index]
-    } as LiveData<Transcription>
+    }
 
     fun getNew() = MutableLiveData<Transcription>().apply {
         value = Transcription("", Date())
-    } as LiveData<Transcription>
+    }
 }
