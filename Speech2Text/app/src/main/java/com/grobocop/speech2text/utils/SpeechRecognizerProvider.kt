@@ -17,7 +17,7 @@ object SpeechRecognizerProvider {
 
         recognizer.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
-
+                speechRecognizerObserver.onReadyForSpeech()
             }
 
             override fun onRmsChanged(rmsdB: Float) {
@@ -29,7 +29,11 @@ object SpeechRecognizerProvider {
             }
 
             override fun onPartialResults(partialResults: Bundle?) {
-
+                val matches =
+                    partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                if (matches != null && matches[0].isNotBlank()) {
+                    speechRecognizerObserver.onPartialResult(matches[0])
+                }
             }
 
             override fun onEvent(eventType: Int, params: Bundle?) {
@@ -50,7 +54,7 @@ object SpeechRecognizerProvider {
 
             override fun onResults(results: Bundle?) {
                 val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if(matches!=null) {
+                if (matches != null) {
                     speechRecognizerObserver.onResult(matches[0])
                 }
             }

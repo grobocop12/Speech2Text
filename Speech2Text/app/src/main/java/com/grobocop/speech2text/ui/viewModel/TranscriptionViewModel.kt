@@ -14,14 +14,12 @@ class TranscriptionViewModel(private val transcriptionRepository: TranscriptionR
         transcription = it
     }
 
-
     fun addItem() = transcriptionRepository.addTranscription(this.transcription?.value!!)
 
     fun getTranscription(index: Int): LiveData<Transcription> =
         transcription ?: transcriptionRepository.getTranscription(index).also {
             transcription = it
         }
-
 
     fun setText(text: String) {
         transcription?.value?.text = text
