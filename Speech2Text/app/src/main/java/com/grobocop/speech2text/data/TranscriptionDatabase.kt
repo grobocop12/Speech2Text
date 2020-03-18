@@ -1,15 +1,33 @@
 package com.grobocop.speech2text.data
 
-class TranscriptionDatabase private constructor() {
-    var transcriptionDao = TranscriptionDao()
-        private set
+import android.content.Context
+import androidx.room.*
+
+
+@Database(entities = [Transcription::class], version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
+abstract class TranscriptionDatabase : RoomDatabase() {
+    abstract fun transcriptionsDao(): TranscriptionsDao
 
     companion object {
         @Volatile
         private var instance: TranscriptionDatabase? = null
 
-        fun getInstance() = instance ?: synchronized(this) {
-            instance ?: TranscriptionDatabase().also { instance = it }
+        fun getDatabase(context: Context): TranscriptionDatabase? {
+            if (instance == null) {
+                synchronized(TranscriptionDatabase::class.java) {
+                    if (instance == null) {
+                        instance = Room.databaseBuilder(
+                            context.applicationContext,
+                            TranscriptionDatabase::class.java,
+                            "TranscriptionDatabase"
+                        )
+                            .fallbackToDestructiveMigration()
+                            .build()
+                    }
+                }
+            }
+            return instance
         }
     }
 }

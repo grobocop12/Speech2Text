@@ -31,9 +31,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        val factory = InjectorUtils.provideTranscriptionsListViewModelFactory()
+
         homeViewModel =
-            ViewModelProvider(this, factory).get(TranscriptionsListViewModel::class.java)
+            ViewModelProvider(this).get(TranscriptionsListViewModel::class.java)
     }
 
     private fun setupUI(root: View) {
@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         val floatingButton = root.findViewById<FloatingActionButton>(R.id.home_fab)
         listRecyclerView.layoutManager = LinearLayoutManager(this.context)
         listRecyclerView.adapter = adapter
-        transcriptions.observe(this.viewLifecycleOwner, Observer {
+        transcriptions?.observe(this.viewLifecycleOwner, Observer {
             adapter.notifyDataSetChanged()
         })
         floatingButton?.setOnClickListener {

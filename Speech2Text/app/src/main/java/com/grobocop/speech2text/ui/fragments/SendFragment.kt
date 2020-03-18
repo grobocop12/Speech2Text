@@ -31,22 +31,19 @@ class SendFragment : Fragment() {
 
     override fun onStop() {
         val text = textView.text.toString()
-        sendViewModel.setText(text)
-        sendViewModel.addItem()
+//        sendViewModel.setText(text)
+        //      sendViewModel.addItem()
         super.onStop()
     }
 
     private fun setViewModel(index: Int?) {
-        val factory = InjectorUtils.provideTranscriptionViewModelFactory()
-        sendViewModel = ViewModelProvider(this, factory).get(TranscriptionViewModel::class.java)
-        if (index == null || index == -1) {
-            sendViewModel.getNew().observe(this.viewLifecycleOwner, Observer {
-                textView.setText(it.text)
-            })
-        } else {
-            sendViewModel.getTranscription(index).observe(this.viewLifecycleOwner, Observer {
+
+        sendViewModel = ViewModelProvider(this).get(TranscriptionViewModel::class.java)
+        if (index != null) {
+            sendViewModel.getTranscription(index)?.observe(this.viewLifecycleOwner, Observer {
                 textView.setText(it.text)
             })
         }
+
     }
 }

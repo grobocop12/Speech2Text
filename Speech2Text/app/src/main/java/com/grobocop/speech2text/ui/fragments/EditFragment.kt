@@ -24,6 +24,7 @@ import com.grobocop.speech2text.ui.viewModel.TranscriptionViewModel
 import com.grobocop.speech2text.utils.InjectorUtils
 import com.grobocop.speech2text.utils.SpeechRecognizerObserver
 import com.grobocop.speech2text.utils.SpeechRecognizerProvider
+import java.util.*
 import kotlin.math.pow
 
 class EditFragment : Fragment() {
@@ -32,51 +33,43 @@ class EditFragment : Fragment() {
     private lateinit var fab: FloatingActionButton
     private lateinit var recognizer: SpeechRecognizer
     private lateinit var recognizerObserver: SpeechRecognizerObserver
+    private var index : Int? = null
     private var isListening = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val index = arguments?.getInt("index")
+        index = arguments?.getInt("index")
         val root = inflater.inflate(R.layout.fragment_edit, container, false)
         setViewModel()
         setUI(root)
         setRecognizerListener()
         setRecognizer()
-        setObservers(index)
         setOnClickListeners()
         setTextWatcher()
         return root
     }
 
     override fun onStop() {
-        editViewModel.addItem()
+        val newTranscription = Transcription(index, Date(), transcriptionET.text.toString())
+        editViewModel.addItem(newTranscription)
         super.onStop()
     }
 
     private fun setViewModel() {
-        val factory = InjectorUtils.provideTranscriptionViewModelFactory()
-        editViewModel = ViewModelProvider(this, factory).get(TranscriptionViewModel::class.java)
+        editViewModel = ViewModelProvider(this).get(TranscriptionViewModel::class.java)
+        if (index != null) {
+            editViewModel.getTranscription(index!!)?.observe(this.viewLifecycleOwner, Observer {
+                transcriptionET.setText(it.text)
+            })
+        }
     }
 
     private fun setUI(root: View) {
         transcriptionET = root.findViewById(R.id.transcription_text_et)
         fab = root.findViewById(R.id.edit_fab)
-
-    }
-
-    private fun setObservers(index: Int?) {
-        if (index == null) {
-            editViewModel.getNew().observe(this.viewLifecycleOwner, Observer<Transcription> {
-                transcriptionET.setText(it.text)
-            })
-        } else {
-            editViewModel.getTranscription(index)
-                .observe(this.viewLifecycleOwner, Observer<Transcription> {
-                    transcriptionET.setText(it.text)
-                })
-        }
     }
 
     private fun setOnClickListeners() {
@@ -103,7 +96,6 @@ class EditFragment : Fragment() {
 
             override fun onResult(result: String?) {
                 dialog.dismiss()
-                editViewModel.appendText(result)
                 fab.setImageDrawable(
                     resources.getDrawable(
                         R.drawable.ic_play_arrow,
@@ -114,12 +106,10 @@ class EditFragment : Fragment() {
             }
 
             override fun onReadyForSpeech() {
-
                 Toast.makeText(this@EditFragment.context, "Speak now!", Toast.LENGTH_SHORT).show()
             }
 
             override fun onPartialResult(result: String?) {
-
             }
 
         }
@@ -133,7 +123,7 @@ class EditFragment : Fragment() {
     private fun setTextWatcher() {
         transcriptionET.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                editViewModel.setText(s.toString())
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

@@ -1,22 +1,38 @@
 package com.grobocop.speech2text.data
 
-class TranscriptionRepository private constructor(private val transcriptionDao: TranscriptionDao) {
-    fun addTranscription(transcription: Transcription) {
-        transcriptionDao.addTranscription(transcription)
+import android.app.Application
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
+
+class TranscriptionRepository(application: Application) : CoroutineScope {
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
+
+    private var transcriptionDao: TranscriptionsDao?
+
+    init {
+        val db = TranscriptionDatabase.getDatabase(application)
+        transcriptionDao = db?.transcriptionsDao()
     }
 
-    fun getTranscriptions() = transcriptionDao.getTranscriptions()
-
-    fun getTranscription(index: Int) = transcriptionDao.getTranscription(index)
-
-    fun getNew() = transcriptionDao.getNew()
-
-    companion object {
-        @Volatile
-        private var instance: TranscriptionRepository? = null
-
-        fun getInstance(transcriptionDao: TranscriptionDao) = instance ?: synchronized(this) {
-            instance ?: TranscriptionRepository(transcriptionDao).also { instance = it }
+    fun addTranscription(transcription: Transcription) {
+        launch {
+            addTranscriptionBG(transcription)
         }
     }
+
+    private suspend fun addTranscriptionBG(transcription: Transcription) {
+        withContext(Dispatchers.IO) {
+            transcriptionDao?.setTranscription(transcription)
+        }
+    }
+
+    fun getTranscriptions() = transcriptionDao?.getTranscriptions()
+
+    fun getTranscription(index: Int) = transcriptionDao?.getTranscription(index)
+
 }
