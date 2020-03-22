@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#096ac7</color>
     <color name="colorPrimaryLight">#77b6ea</color>
     <color name="colorAccent">#7a95bf</color>
-    <color name="colorViewHolder">#FEFFF1</color>
-    <color name="colorBorder">#BEDFD1</color>
+    <color name="colorViewHolder">#FFFFFF</color>
+    <color name="colorBorder">#010101</color>
+    <color name="colorBackground">#2b373f</color>
 </resources>

@@ -16,6 +16,8 @@ class TranscriptionsListViewModel(application: Application) : AndroidViewModel(a
 
     fun getTranscriptions() = transcriptionRepository.getTranscriptions()
 
+    fun deleteTranscription(id: Int) = transcriptionRepository.deleteTranscription(id)
+
     fun getTranscription(index: Int) = transcriptionRepository.getTranscription(index)
 
 }

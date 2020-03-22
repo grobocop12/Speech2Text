@@ -3,37 +3,30 @@ package com.grobocop.speech2text.ui.fragments
 import android.app.AlertDialog
 import android.os.Bundle
 import android.speech.SpeechRecognizer
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.gauravk.audiovisualizer.visualizer.BarVisualizer
-import com.gauravk.audiovisualizer.visualizer.WaveVisualizer
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 import com.grobocop.speech2text.R
 import com.grobocop.speech2text.data.Transcription
 import com.grobocop.speech2text.ui.viewModel.TranscriptionViewModel
-import com.grobocop.speech2text.utils.InjectorUtils
 import com.grobocop.speech2text.utils.SpeechRecognizerObserver
 import com.grobocop.speech2text.utils.SpeechRecognizerProvider
 import java.util.*
-import kotlin.math.pow
 
 class EditFragment : Fragment() {
     private lateinit var editViewModel: TranscriptionViewModel
     private lateinit var transcriptionET: EditText
     private lateinit var fab: FloatingActionButton
-    private lateinit var recognizer: SpeechRecognizer
+    private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var recognizerObserver: SpeechRecognizerObserver
-    private var index : Int? = null
+    private var id: Int? = null
     private var isListening = false
 
 
@@ -41,30 +34,33 @@ class EditFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        index = arguments?.getInt("index")
+        id = arguments?.getInt("id")
         val root = inflater.inflate(R.layout.fragment_edit, container, false)
         setViewModel()
         setUI(root)
         setRecognizerListener()
-        setRecognizer()
         setOnClickListeners()
-        setTextWatcher()
         return root
     }
 
     override fun onStop() {
-        val newTranscription = Transcription(index, Date(), transcriptionET.text.toString())
-        editViewModel.addItem(newTranscription)
+        val text = transcriptionET.text.toString()
+        if (text.isNotEmpty()) {
+            val newTranscription = Transcription(id, Date(), text)
+            editViewModel.addItem(newTranscription)
+        }
         super.onStop()
     }
 
     private fun setViewModel() {
         editViewModel = ViewModelProvider(this).get(TranscriptionViewModel::class.java)
-        if (index != null) {
-            editViewModel.getTranscription(index!!)?.observe(this.viewLifecycleOwner, Observer {
+        val id = this.id
+        id?.let {
+            editViewModel.getTranscription(id)?.observe(this.viewLifecycleOwner, Observer {
                 transcriptionET.setText(it.text)
             })
         }
+
     }
 
     private fun setUI(root: View) {
@@ -76,11 +72,11 @@ class EditFragment : Fragment() {
         fab.setOnClickListener {
             val theme = it.context.theme
             if (isListening) {
-                recognizer.stopListening()
+                speechRecognizer.stopListening()
                 fab.setImageDrawable(resources.getDrawable(R.drawable.ic_play_arrow, theme))
             } else {
                 val intent = SpeechRecognizerProvider.createSpeechRecognitionIntent()
-                recognizer.startListening(intent)
+                speechRecognizer.startListening(intent)
                 fab.setImageDrawable(resources.getDrawable(R.drawable.ic_pause, theme))
             }
             isListening = !isListening
@@ -111,24 +107,9 @@ class EditFragment : Fragment() {
 
             override fun onPartialResult(result: String?) {
             }
-
         }
-    }
-
-    private fun setRecognizer() {
-        recognizer =
+        speechRecognizer =
             SpeechRecognizerProvider.createSpeechRecognizer(this.context, recognizerObserver)
-    }
-
-    private fun setTextWatcher() {
-        transcriptionET.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
     }
 
 }

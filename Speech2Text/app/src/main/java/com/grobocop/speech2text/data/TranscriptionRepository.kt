@@ -15,7 +15,7 @@ class TranscriptionRepository(application: Application) : CoroutineScope {
     private var transcriptionDao: TranscriptionsDao?
 
     init {
-        val db = TranscriptionDatabase.getDatabase(application)
+        val db = TranscriptionsDatabase.getDatabase(application)
         transcriptionDao = db?.transcriptionsDao()
     }
 
@@ -34,5 +34,16 @@ class TranscriptionRepository(application: Application) : CoroutineScope {
     fun getTranscriptions() = transcriptionDao?.getTranscriptions()
 
     fun getTranscription(index: Int) = transcriptionDao?.getTranscription(index)
+    fun deleteTranscription(id: Int) {
+        launch {
+            deleteTranscriptionBG(id)
+        }
+    }
+
+    private suspend fun deleteTranscriptionBG(id: Int) {
+        withContext(Dispatchers.IO) {
+            transcriptionDao?.deleteTranscription(id)
+        }
+    }
 
 }

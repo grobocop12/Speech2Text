@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.grobocop.speech2text.R
 import com.grobocop.speech2text.ui.viewModel.TranscriptionViewModel
-import com.grobocop.speech2text.utils.InjectorUtils
 
 class SendFragment : Fragment() {
 
@@ -22,25 +21,23 @@ class SendFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val index = arguments?.getInt("index")
+        val id = arguments?.getInt("index")
         val root = inflater.inflate(R.layout.fragment_send, container, false)
         textView = root.findViewById(R.id.text_send)
-        setViewModel(index)
+        setViewModel(id)
         return root
     }
 
     override fun onStop() {
-        val text = textView.text.toString()
-//        sendViewModel.setText(text)
-        //      sendViewModel.addItem()
+
         super.onStop()
     }
 
-    private fun setViewModel(index: Int?) {
+    private fun setViewModel(id: Int?) {
 
         sendViewModel = ViewModelProvider(this).get(TranscriptionViewModel::class.java)
-        if (index != null) {
-            sendViewModel.getTranscription(index)?.observe(this.viewLifecycleOwner, Observer {
+        id?.let {
+            sendViewModel.getTranscription(id)?.observe(this.viewLifecycleOwner, Observer {
                 textView.setText(it.text)
             })
         }

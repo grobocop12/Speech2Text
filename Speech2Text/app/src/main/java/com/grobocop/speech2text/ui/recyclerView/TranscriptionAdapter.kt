@@ -3,13 +3,13 @@ package com.grobocop.speech2text.ui.recyclerView
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.grobocop.speech2text.R
 import com.grobocop.speech2text.data.Transcription
+import com.grobocop.speech2text.utils.ItemRemover
 
 class TranscriptionAdapter(
     private val items: LiveData<List<Transcription>>?,
@@ -17,7 +17,7 @@ class TranscriptionAdapter(
 ) :
     RecyclerView.Adapter<TranscriptionViewHolder>() {
 
-    var onItemClickListener: View.OnClickListener? = null
+    var itemRemover: ItemRemover? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TranscriptionViewHolder {
         return TranscriptionViewHolder(
@@ -33,23 +33,21 @@ class TranscriptionAdapter(
 
     override fun onBindViewHolder(holder: TranscriptionViewHolder, position: Int) {
         val item = items?.value?.get(position)
+        val id = item?.id
         val text = item?.text
-        holder.transcriptionText.text = if (text?.length!! < 15) {
-            text.replace('\n', ' ')
-        } else {
-            text.take(15).replace('\n', ' ') + "..."
-        }
-        val index = item.id
         val args = Bundle()
-        if (index != null) {
-            args.putInt("index", index)
-        }
+        text?.let { holder.transcriptionText.text = it.take(15).replace("\n", " ") }
+        id?.let { args.putInt("id", id) }
         holder.itemView.setOnClickListener(
             Navigation.createNavigateOnClickListener(
                 R.id.action_nav_home_to_nav_edit,
                 args
             )
         )
+        holder.itemView.setOnLongClickListener {
+            id?.let { itemRemover?.remove(id) }
+            true
+        }
     }
 
 

@@ -1,5 +1,7 @@
 package com.grobocop.speech2text.ui.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,7 @@ import com.grobocop.speech2text.R
 import com.grobocop.speech2text.ui.viewModel.TranscriptionsListViewModel
 import com.grobocop.speech2text.ui.recyclerView.TranscriptionAdapter
 import com.grobocop.speech2text.utils.InjectorUtils
+import com.grobocop.speech2text.utils.ItemRemover
 
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: TranscriptionsListViewModel
@@ -31,7 +34,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun setViewModel() {
-
         homeViewModel =
             ViewModelProvider(this).get(TranscriptionsListViewModel::class.java)
     }
@@ -40,6 +42,18 @@ class HomeFragment : Fragment() {
         val listRecyclerView = root.findViewById<RecyclerView>(R.id.transcriptions_list)
         val transcriptions = homeViewModel.getTranscriptions()
         val adapter = TranscriptionAdapter(transcriptions, this.context)
+        adapter.itemRemover = object : ItemRemover {
+            override fun remove(id: Int) {
+                val dialog = AlertDialog.Builder(this@HomeFragment.context)
+                    .setMessage("Are you sure you wan to delete this?")
+                    .setNegativeButton("No", null)
+                    .setPositiveButton(
+                        "Yes"
+                    ) { _, _ -> homeViewModel.deleteTranscription(id) }
+                    .create()
+                dialog.show()
+            }
+        }
         val floatingButton = root.findViewById<FloatingActionButton>(R.id.home_fab)
         listRecyclerView.layoutManager = LinearLayoutManager(this.context)
         listRecyclerView.adapter = adapter
