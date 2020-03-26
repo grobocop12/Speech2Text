@@ -9,6 +9,7 @@ import android.speech.RecognizerIntent
 import java.util.*
 
 object SpeechRecognizerProvider {
+
     fun createSpeechRecognizer(
         context: Context?,
         speechRecognizerObserver: SpeechRecognizerObserver
@@ -16,6 +17,8 @@ object SpeechRecognizerProvider {
         val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
 
         recognizer.setRecognitionListener(object : RecognitionListener {
+
+            var singleResult = true
             override fun onReadyForSpeech(params: Bundle?) {
                 speechRecognizerObserver.onReadyForSpeech()
             }
@@ -29,10 +32,12 @@ object SpeechRecognizerProvider {
             }
 
             override fun onPartialResults(partialResults: Bundle?) {
-                val matches =
-                    partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if (matches != null && matches[0].isNotBlank()) {
-                    speechRecognizerObserver.onPartialResult(matches[0])
+                val matches = partialResults
+                    ?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                matches?.get(0)?.trim().toString().let {
+                    if (it.isNotEmpty()) {
+                        speechRecognizerObserver.onPartialResult(it)
+                    }
                 }
             }
 
@@ -49,13 +54,18 @@ object SpeechRecognizerProvider {
             }
 
             override fun onError(error: Int) {
-
+                speechRecognizerObserver.onError(error)
+                speechRecognizerObserver.onStop()
             }
 
             override fun onResults(results: Bundle?) {
-                val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                if (matches != null) {
-                    speechRecognizerObserver.onResult(matches[0])
+                if (singleResult) {
+                    results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION).let {
+                        speechRecognizerObserver.onResult(it?.get(0))
+                    }
+                    singleResult = false
+                    speechRecognizerObserver.onStop()
+
                 }
             }
         })
@@ -72,6 +82,4 @@ object SpeechRecognizerProvider {
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         return intent
     }
-
-
 }
