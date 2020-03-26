@@ -40,6 +40,24 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
+        android:id="@+id/title_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:inputType="text"
+        android:hint="@string/title_hint"
+        android:textColor="@android:color/white"
+        android:textColorHint="@color/colorHintText"
+        app:layout_constraintBottom_toTopOf="@+id/transcription_text_et"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:autofillHints="" />
+
+    <EditText
         android:id="@+id/transcription_text_et"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -53,20 +71,20 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/last_word_tv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/title_et"
+        tools:ignore="LabelFor" />
 
     <TextView
         android:id="@+id/last_word_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/edit_fab"
         app:layout_constraintEnd_toStartOf="@+id/end"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/start"
-        app:layout_constraintTop_toBottomOf="@+id/transcription_text_et" />
+        app:layout_constraintStart_toStartOf="@+id/start" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

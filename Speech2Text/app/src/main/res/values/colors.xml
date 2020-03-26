@@ -7,4 +7,5 @@
     <color name="colorViewHolder">#FFFFFF</color>
     <color name="colorBorder">#010101</color>
     <color name="colorBackground">#2b373f</color>
+    <color name="colorHintText">#A0A0A0</color>
 </resources>
