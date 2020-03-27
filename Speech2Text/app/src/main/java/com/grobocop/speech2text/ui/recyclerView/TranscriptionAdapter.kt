@@ -34,10 +34,13 @@ class TranscriptionAdapter(
     override fun onBindViewHolder(holder: TranscriptionViewHolder, position: Int) {
         val item = items?.value?.get(position)
         val id = item?.id
-        val text = item?.text
+        val title = item?.title
+        val date = item?.date
         val args = Bundle()
-        text?.let { holder.transcriptionText.text = it.take(15).replace("\n", " ") }
+        title?.let { holder.titleTV.text = it }
+        //date?.let {holder.dateTV.text = it.toString()}
         id?.let { args.putInt("id", id) }
+
         holder.itemView.setOnClickListener(
             Navigation.createNavigateOnClickListener(
                 R.id.action_nav_home_to_nav_edit,

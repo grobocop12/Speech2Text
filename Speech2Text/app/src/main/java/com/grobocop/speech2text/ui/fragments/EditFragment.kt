@@ -21,6 +21,7 @@ class EditFragment : Fragment() {
     private lateinit var editViewModel: TranscriptionViewModel
     private var speechRecognizer: SpeechRecognizer? = null
     private var id: Int? = null
+    private var creationDate: Date? = null
     private var isListening = false
 
     override fun onCreateView(
@@ -36,7 +37,7 @@ class EditFragment : Fragment() {
 
     override fun onStop() {
         val text = transcription_text_et.text.toString()
-        val title = title_et.text.toString()
+        val title = title_et.text.toString().take(50)
         if (text.isNotEmpty() || title.isNotEmpty()) {
             val newTranscription = Transcription(id, Date(), title, text)
             editViewModel.addItem(newTranscription)
@@ -50,12 +51,13 @@ class EditFragment : Fragment() {
         id?.let {
             editViewModel.getTranscription(id)?.observe(this.viewLifecycleOwner, Observer {
                 transcription_text_et.setText(it.text)
+                title_et.setText(it.title)
             })
         }
     }
 
     private fun setOnClickListeners() {
-        edit_fab.setOnClickListener {
+        edit_fab?.setOnClickListener {
             val theme = it.context.theme
             if (isListening) {
                 speechRecognizer?.stopListening()
