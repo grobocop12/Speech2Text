@@ -10,5 +10,6 @@ data class Transcription(
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
     var date: Date? = null,
+    var title: String? = null,
     var text: String? = null
 )

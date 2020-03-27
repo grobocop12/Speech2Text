@@ -2,9 +2,11 @@ package com.grobocop.speech2text.data
 
 import android.content.Context
 import androidx.room.*
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 
-@Database(entities = [Transcription::class], version = 1, exportSchema = false)
+@Database(entities = [Transcription::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class TranscriptionsDatabase : RoomDatabase() {
     abstract fun transcriptionsDao(): TranscriptionsDao
@@ -12,6 +14,12 @@ abstract class TranscriptionsDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var instance: TranscriptionsDatabase? = null
+
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""ALTER TABLE  Transcriptions ADD COLUMN title TEXT""")
+            }
+        }
 
         fun getDatabase(context: Context): TranscriptionsDatabase? {
             if (instance == null) {
@@ -22,7 +30,7 @@ abstract class TranscriptionsDatabase : RoomDatabase() {
                             TranscriptionsDatabase::class.java,
                             "TranscriptionDatabase"
                         )
-                            .fallbackToDestructiveMigration()
+                            .addMigrations(MIGRATION_1_2)
                             .build()
                     }
                 }
