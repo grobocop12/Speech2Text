@@ -37,9 +37,10 @@ class EditFragment : Fragment() {
 
     override fun onStop() {
         val text = transcription_text_et.text.toString()
-        val title = title_et.text.toString().take(50)
+        val title = title_et.text.toString().take(40)
         if (text.isNotEmpty() || title.isNotEmpty()) {
-            val newTranscription = Transcription(id, Date(), title, text)
+            val date = creationDate ?: Date()
+            val newTranscription = Transcription(id, date, title, text)
             editViewModel.addItem(newTranscription)
         }
         super.onStop()
@@ -52,6 +53,7 @@ class EditFragment : Fragment() {
             editViewModel.getTranscription(id)?.observe(this.viewLifecycleOwner, Observer {
                 transcription_text_et.setText(it.text)
                 title_et.setText(it.title)
+                creationDate = it.date
             })
         }
     }

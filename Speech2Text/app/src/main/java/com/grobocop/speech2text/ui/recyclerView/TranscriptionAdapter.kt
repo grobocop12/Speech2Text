@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.grobocop.speech2text.R
 import com.grobocop.speech2text.data.Transcription
 import com.grobocop.speech2text.utils.ItemRemover
+import java.text.SimpleDateFormat
 
 class TranscriptionAdapter(
     private val items: LiveData<List<Transcription>>?,
@@ -38,7 +39,11 @@ class TranscriptionAdapter(
         val date = item?.date
         val args = Bundle()
         title?.let { holder.titleTV.text = it }
-        //date?.let {holder.dateTV.text = it.toString()}
+        date?.let {
+            val format = SimpleDateFormat("dd/MM/yyyy HH:mm")
+            val dataString = format.format(it)
+            holder.dateTV.text = dataString
+        }
         id?.let { args.putInt("id", id) }
 
         holder.itemView.setOnClickListener(
