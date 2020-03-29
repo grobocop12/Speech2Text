@@ -1,6 +1,10 @@
 package com.grobocop.speech2text.ui.fragments
 
+import android.media.AudioManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.speech.SpeechRecognizer
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +44,7 @@ class EditFragment : Fragment() {
 
     override fun onStop() {
         saveTranscription()
+        AudioUtils.muteAudio(false, this@EditFragment.context )
         super.onStop()
     }
 
@@ -67,7 +72,7 @@ class EditFragment : Fragment() {
 
     private fun setOnClickListeners() {
 
-        fab?.setOnClickListener {
+        fab.setOnClickListener {
             val theme = it.context.theme
             if (isListening) {
                 speechRecognizer?.stopListening()
@@ -79,7 +84,9 @@ class EditFragment : Fragment() {
                 )
                 last_word_tv.text = ""
                 isListening = false
+                AudioUtils.muteAudio(false, this.context)
             } else {
+                AudioUtils.muteAudio(true, this.context)
                 speechRecognizer = SpeechRecognizerProvider.createSpeechRecognizer(
                     this.activity?.applicationContext,
                     getRecognizerObserver()
@@ -116,7 +123,6 @@ class EditFragment : Fragment() {
                     "Error occurred, recognition stopped.",
                     Toast.LENGTH_SHORT
                 ).show()
-                onStop()
             }
 
             override fun onStop() {
@@ -130,5 +136,20 @@ class EditFragment : Fragment() {
                 isListening = false
             }
         }
+    }
+
+    object AudioUtils {
+
+        @JvmStatic
+        fun muteAudio(shouldMute: Boolean, context: Context?) {
+            context?.let {
+                val audioManager: AudioManager =
+                    it.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                val muteValue =
+                    if (shouldMute) AudioManager.ADJUST_MUTE else AudioManager.ADJUST_UNMUTE
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, muteValue, 0)
+            }
+        }
+
     }
 }

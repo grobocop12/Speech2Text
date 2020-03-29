@@ -64,9 +64,8 @@ object SpeechRecognizerProvider {
                         speechRecognizerObserver.onResult(it?.get(0))
                     }
                     singleResult = false
-                    speechRecognizerObserver.onStop()
-
                 }
+                speechRecognizerObserver.onStop()
             }
         })
         return recognizer
