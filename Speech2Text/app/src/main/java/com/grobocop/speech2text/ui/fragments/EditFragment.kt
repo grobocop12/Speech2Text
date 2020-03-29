@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.grobocop.speech2text.R
 import com.grobocop.speech2text.data.Transcription
 import com.grobocop.speech2text.ui.viewModel.TranscriptionViewModel
@@ -19,6 +20,7 @@ import java.util.*
 
 class EditFragment : Fragment() {
     private lateinit var editViewModel: TranscriptionViewModel
+    private lateinit var fab: FloatingActionButton
     private var speechRecognizer: SpeechRecognizer? = null
     private var id: Int? = null
     private var creationDate: Date? = null
@@ -30,12 +32,18 @@ class EditFragment : Fragment() {
     ): View? {
         id = arguments?.getInt("id")
         val root = inflater.inflate(R.layout.fragment_edit, container, false)
+        fab = root.findViewById(R.id.edit_fab)
         setViewModel()
         setOnClickListeners()
         return root
     }
 
     override fun onStop() {
+        saveTranscription()
+        super.onStop()
+    }
+
+    private fun saveTranscription() {
         val text = transcription_text_et.text.toString()
         val title = title_et.text.toString().take(40)
         if (text.isNotEmpty() || title.isNotEmpty()) {
@@ -43,7 +51,6 @@ class EditFragment : Fragment() {
             val newTranscription = Transcription(id, date, title, text)
             editViewModel.addItem(newTranscription)
         }
-        super.onStop()
     }
 
     private fun setViewModel() {
@@ -59,7 +66,8 @@ class EditFragment : Fragment() {
     }
 
     private fun setOnClickListeners() {
-        edit_fab?.setOnClickListener {
+
+        fab?.setOnClickListener {
             val theme = it.context.theme
             if (isListening) {
                 speechRecognizer?.stopListening()
