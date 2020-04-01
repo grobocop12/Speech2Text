@@ -12,15 +12,10 @@
             android:id="@+id/nav_edit"
             android:icon="@drawable/ic_menu_edit"
             android:title="@string/menu_edit" />
+
+        <item
+            android:id="@+id/nav_info"
+            android:title="@string/info" />
+
     </group>
-
-    <item android:title="@string/drawer_communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/menu_send" />
-        </menu>
-    </item>
-
 </menu>

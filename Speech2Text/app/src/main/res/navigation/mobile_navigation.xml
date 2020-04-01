@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_nav_home_to_nav_send"
             app:destination="@id/nav_send" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_info"
+            app:destination="@id/nav_info" />
     </fragment>
 
     <fragment
@@ -29,5 +32,11 @@
         android:name="com.grobocop.speech2text.ui.fragments.EditFragment"
         android:label="@string/menu_edit"
         tools:layout="@layout/fragment_edit" />
+
+    <fragment
+        android:id="@+id/nav_info"
+        android:name="com.grobocop.speech2text.ui.fragments.InfoFragment"
+        android:label="Info"
+        tools:layout="@layout/fragment_info" />
 
 </navigation>
