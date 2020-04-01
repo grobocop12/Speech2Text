@@ -2,9 +2,7 @@ package com.grobocop.speech2text.ui.fragments
 
 import android.media.AudioManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
 import android.speech.SpeechRecognizer
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +27,8 @@ class EditFragment : Fragment() {
     private var id: Int? = null
     private var creationDate: Date? = null
     private var isListening = false
+    private var volume: Int = 0
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,12 +39,17 @@ class EditFragment : Fragment() {
         fab = root.findViewById(R.id.edit_fab)
         setViewModel()
         setOnClickListeners()
+        this.context?.let {
+            volume = AudioUtils.getVolume(it)
+        }
         return root
     }
 
     override fun onStop() {
         saveTranscription()
-        AudioUtils.muteAudio(false, this@EditFragment.context )
+        this.context?.let {
+            AudioUtils.setVolume(volume, it)
+        }
         super.onStop()
     }
 
@@ -84,9 +89,10 @@ class EditFragment : Fragment() {
                 )
                 last_word_tv.text = ""
                 isListening = false
-                AudioUtils.muteAudio(false, this.context)
             } else {
-                AudioUtils.muteAudio(true, this.context)
+                this.context?.let { context ->
+                    AudioUtils.setVolume(0, context)
+                }
                 speechRecognizer = SpeechRecognizerProvider.createSpeechRecognizer(
                     this.activity?.applicationContext,
                     getRecognizerObserver()
@@ -141,15 +147,19 @@ class EditFragment : Fragment() {
     object AudioUtils {
 
         @JvmStatic
-        fun muteAudio(shouldMute: Boolean, context: Context?) {
-            context?.let {
-                val audioManager: AudioManager =
-                    it.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-                val muteValue =
-                    if (shouldMute) AudioManager.ADJUST_MUTE else AudioManager.ADJUST_UNMUTE
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, muteValue, 0)
-            }
+        fun setVolume(volume: Int, context: Context) {
+            val audioManager: AudioManager =
+                context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
         }
 
+        @JvmStatic
+        fun getVolume(context: Context): Int {
+            val audioManager: AudioManager =
+                context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            return audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+        }
     }
+
+
 }

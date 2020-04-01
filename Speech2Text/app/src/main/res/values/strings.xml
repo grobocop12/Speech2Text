@@ -3,8 +3,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Speech2Text</string>
-    <string name="nav_header_subtitle"></string>
-    <string name="nav_header_desc"></string>
+    <string name="nav_header_subtitle" />
+    <string name="nav_header_desc" />
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
@@ -14,12 +14,14 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
 
-
     <string name="menu_edit">Edit</string>
+    <string name="menu_info">Info</string>
     <string name="drawer_communicate">Communicate</string>
     <string name="title_hint">Title (max. 40 characters)</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="info">Info</string>
+    <string name="info_fragment_title">Info</string>
+    <string name="info_fragment">Speech2Text is a simple mobile app designed for voice transcription.</string>
+    <string name="info_fragment_contact">Authors email address:</string>
+    <string name="info_fragment_contact_email">chasnik97876@gmail.com</string>
+
 </resources>
