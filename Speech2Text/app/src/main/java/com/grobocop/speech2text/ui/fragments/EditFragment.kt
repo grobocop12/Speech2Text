@@ -2,6 +2,7 @@ package com.grobocop.speech2text.ui.fragments
 
 import android.media.AudioManager
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.speech.SpeechRecognizer
 import android.view.LayoutInflater
@@ -15,14 +16,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.grobocop.speech2text.R
 import com.grobocop.speech2text.data.Transcription
 import com.grobocop.speech2text.ui.viewModel.TranscriptionViewModel
-import com.grobocop.speech2text.utils.SpeechRecognizerObserver
-import com.grobocop.speech2text.utils.SpeechRecognizerProvider
+import com.grobocop.speech2text.utils.recognizer.*
 import kotlinx.android.synthetic.main.fragment_edit.*
 import java.util.*
 
 class EditFragment : Fragment() {
     private lateinit var editViewModel: TranscriptionViewModel
     private lateinit var fab: FloatingActionButton
+    private lateinit var recognizerFactory: SpeechRecognizerFactory
+    private lateinit var intentFactory: SpeechRecognizerIntentFactory
     private var speechRecognizer: SpeechRecognizer? = null
     private var id: Int? = null
     private var creationDate: Date? = null
@@ -39,10 +41,20 @@ class EditFragment : Fragment() {
         fab = root.findViewById(R.id.edit_fab)
         setViewModel()
         setOnClickListeners()
+        setAudioUtils()
+        setFactories()
+        return root
+    }
+
+    private fun setFactories() {
+        recognizerFactory = SpeechRecognizerFactory()
+        intentFactory = SpeechRecognizerIntentFactory()
+    }
+
+    private fun setAudioUtils() {
         this.context?.let {
             volume = AudioUtils.getVolume(it)
         }
-        return root
     }
 
     override fun onStop() {
@@ -76,38 +88,45 @@ class EditFragment : Fragment() {
     }
 
     private fun setOnClickListeners() {
-
         fab.setOnClickListener {
             val theme = it.context.theme
-            if (isListening) {
-                speechRecognizer?.stopListening()
-                edit_fab.setImageDrawable(
-                    resources.getDrawable(
-                        R.drawable.ic_fiber_record_white,
-                        theme
-                    )
-                )
-                last_word_tv.text = ""
-                isListening = false
+            isListening = if (isListening) {
+                stopListening(theme)
+                false
             } else {
-                this.context?.let { context ->
-                    AudioUtils.setVolume(0, context)
-                }
-                speechRecognizer = SpeechRecognizerProvider.createSpeechRecognizer(
-                    this.activity?.applicationContext,
-                    getRecognizerObserver()
-                )
-                val intent = SpeechRecognizerProvider.createSpeechRecognitionIntent()
-                speechRecognizer?.startListening(intent)
-                edit_fab.setImageDrawable(resources.getDrawable(R.drawable.ic_stop_white, theme))
-                isListening = true
+                startListening(theme)
+                true
             }
-
         }
     }
 
+    private fun startListening(theme: Resources.Theme) {
+        this.context?.let { context ->
+            AudioUtils.setVolume(0, context)
+        }
+        speechRecognizer = recognizerFactory.createRecognizer(
+            this.activity?.applicationContext,
+            getRecognizerObserver()
+        )
+        val intent = intentFactory.createIntent()
+        speechRecognizer?.startListening(intent)
+        edit_fab.setImageDrawable(resources.getDrawable(R.drawable.ic_stop_white, theme))
+    }
+
+    private fun stopListening(theme: Resources.Theme) {
+        speechRecognizer?.stopListening()
+        edit_fab.setImageDrawable(
+            resources.getDrawable(
+                R.drawable.ic_fiber_record_white,
+                theme
+            )
+        )
+        last_word_tv.text = ""
+    }
+
     private fun getRecognizerObserver(): SpeechRecognizerObserver {
-        return object : SpeechRecognizerObserver {
+        return object :
+            SpeechRecognizerObserver {
             override fun onResult(result: String?) {
                 result.let {
                     val text = transcription_text_et.text.toString() + " " + it
@@ -145,7 +164,6 @@ class EditFragment : Fragment() {
     }
 
     object AudioUtils {
-
         @JvmStatic
         fun setVolume(volume: Int, context: Context) {
             val audioManager: AudioManager =
@@ -160,6 +178,4 @@ class EditFragment : Fragment() {
             return audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
         }
     }
-
-
 }

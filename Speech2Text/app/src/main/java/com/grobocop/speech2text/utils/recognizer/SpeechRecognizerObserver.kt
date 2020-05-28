@@ -1,4 +1,4 @@
-package com.grobocop.speech2text.utils
+package com.grobocop.speech2text.utils.recognizer
 
 interface SpeechRecognizerObserver {
     fun onResult(result: String?)

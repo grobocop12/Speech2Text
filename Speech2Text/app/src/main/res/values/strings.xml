@@ -23,5 +23,6 @@
     <string name="info_fragment">Speech2Text is a simple mobile app designed for voice transcription.</string>
     <string name="info_fragment_contact">Authors email address:</string>
     <string name="info_fragment_contact_email">chasnik97876@gmail.com</string>
+    <string name="privacy_policy">Privacy policy</string>
 
 </resources>

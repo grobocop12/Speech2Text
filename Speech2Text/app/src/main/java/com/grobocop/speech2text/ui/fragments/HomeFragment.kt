@@ -1,7 +1,6 @@
 package com.grobocop.speech2text.ui.fragments
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.grobocop.speech2text.R
 import com.grobocop.speech2text.ui.viewModel.TranscriptionsListViewModel
 import com.grobocop.speech2text.ui.recyclerView.TranscriptionAdapter
-import com.grobocop.speech2text.utils.InjectorUtils
 import com.grobocop.speech2text.utils.ItemRemover
 
 class HomeFragment : Fragment() {
